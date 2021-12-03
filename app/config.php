@@ -18,4 +18,10 @@ return [
         'path' => resource_path('views'),
         'layout' => null,
     ],
+
+    'providers' => [
+        App\Providers\LogServiceProvider::class,
+        App\Providers\ViewServiceProvider::class,
+        App\Providers\ConfigServiceProvider::class,
+    ],
 ];

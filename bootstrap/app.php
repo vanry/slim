@@ -1,60 +1,28 @@
 <?php
 
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\RotatingFileHandler;
-use Monolog\Logger;
-use Monolog\Processor\WebProcessor;
-use Noodlehaus\Config;
-use Pimple\Container;
-use Pimple\Psr11\Container as PsrContainer;
-use Slim\Factory\AppFactory;
-use Slim\Handlers\Strategies\RequestResponseArgs;
-use Slim\Views\PhpRenderer;
-
 require __DIR__.'/../vendor/autoload.php';
 
-$container = new Container;
+$container = new Pimple\Container;
 
-$container['config'] = function () {
-    return new Config(app_path('config.php'));
-};
+$container->register(new App\Providers\LogServiceProvider);
+$container->register(new App\Providers\ViewServiceProvider);
+$container->register(new App\Providers\ConfigServiceProvider);
 
-$container['logger'] = function ($container) {
-    $config = $container['config'];
+$app = Slim\Factory\AppFactory::createFromContainer(
+    new Pimple\Psr11\Container($container)
+);
 
-    $logger = new Logger($config->get('logger.name'));
+$errorHandler = new App\Handlers\ErrorHandler(
+    $app->getCallableResolver(),
+    $app->getResponseFactory(),
+    $container->offsetGet('logger'),
+);
 
-    $logger->pushProcessor(new WebProcessor);
+$app->addErrorMiddleware($container['config']['app.debug'], true, true)
+    ->setDefaultErrorHandler($errorHandler);
 
-    $handler = new RotatingFileHandler(
-        $config->get('logger.path'),
-        $config->get('logger.max_files'),
-        $config->get('logger.level'),
-    );
-
-    $handler->setFormatter(new LineFormatter(null, $config->get('logger.date_format'), true, true));
-
-    $logger->pushHandler($handler);
-
-    return $logger;
-};
-
-$container['view'] = function ($container) {
-    $config = $container['config'];
-
-    $view = new PhpRenderer($config->get('view.path'));
-
-    if ($layout = $config->get('view.layout')) {
-        $view->setLayout($layout);
-    }
-
-    return $view;
-};
-
-$app = AppFactory::createFromContainer(new PsrContainer($container));
-
-$app->addErrorMiddleware($container['config']['app.debug'], true, true, $container['logger']);
-
-$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestResponseArgs);
+$app->getRouteCollector()->setDefaultInvocationStrategy(
+    new Slim\Handlers\Strategies\RequestResponseArgs
+);
 
 return $app;
