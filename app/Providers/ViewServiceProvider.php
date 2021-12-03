@@ -11,12 +11,10 @@ class ViewServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['view'] = function ($container) {
-            $config = $container['config'];
+            $view = new PhpRenderer(config('view.path'));
 
-            $view = new PhpRenderer($config['view.path']);
-
-            if ($config['view.layout']) {
-                $view->setLayout($config['view.layout']);
+            if (config('view.layout')) {
+                $view->setLayout(config('view.layout'));
             }
 
             return $view;

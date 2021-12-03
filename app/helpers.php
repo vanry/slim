@@ -1,5 +1,25 @@
 <?php
 
+if (! function_exists('config')) {
+    /**
+     * Get configuration value.
+     *
+     * @param  string  $key
+     * @param  mixed  $default
+     * @return string
+     */
+    function config($key, $default = null)
+    {
+        static $config;
+
+        if (is_null($config)) {
+            $config = new Noodlehaus\Config(app_path('config.php'));
+        }
+
+        return $config->get($key, $default);
+    }
+}
+
 if (! function_exists('base_path')) {
     /**
      * Get the path to the base of the install.
