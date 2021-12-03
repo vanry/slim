@@ -9,7 +9,7 @@ if (! function_exists('base_path')) {
      */
     function base_path($path = '')
     {
-        return __DIR__.'/../'.$path;
+        return dirname(__DIR__).normalize_path($path);
     }
 }
 
@@ -22,7 +22,7 @@ if (! function_exists('app_path')) {
      */
     function app_path($path = '')
     {
-        return base_path("app/{$path}");
+        return base_path('app').normalize_path($path);
     }
 }
 
@@ -35,7 +35,7 @@ if (! function_exists('resource_path')) {
      */
     function resource_path($path = '')
     {
-        return base_path("resources/{$path}");
+        return base_path('resources').normalize_path($path);
     }
 }
 
@@ -48,6 +48,19 @@ if (! function_exists('storage_path')) {
      */
     function storage_path($path = '')
     {
-        return base_path("storage/{$path}");
+        return base_path('storage').normalize_path($path);
+    }
+}
+
+if (! function_exists('normalize_path')) {
+    /**
+     * Normalize path.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function normalize_path($path)
+    {
+        return $path ? DIRECTORY_SEPARATOR.$path : $path;
     }
 }
