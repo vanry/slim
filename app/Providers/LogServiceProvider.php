@@ -13,7 +13,7 @@ class LogServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['logger'] = function ($container) {
+        $container['logger'] = function () {
             $logger = new Logger(config('logger.name'));
 
             $logger->pushProcessor(new WebProcessor);
