@@ -26,4 +26,6 @@ $app->getRouteCollector()->setDefaultInvocationStrategy(
     new Slim\Handlers\Strategies\RequestResponseArgs
 );
 
+require app_path('routes.php');
+
 return $app;
