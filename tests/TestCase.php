@@ -153,7 +153,7 @@ class TestCase extends PHPUnitTestCase
     {
         $name = strtr(strtoupper($name), '-', '_');
 
-        if (strpos($name, 'HTTP_') !== 0 && ! in_array($name, ['CONTENT_TYPE',  'REMOTE_ADDR'])) {
+        if (strpos($name, 'HTTP_') !== 0 && ! in_array($name, ['CONTENT_TYPE', 'REMOTE_ADDR'])) {
             return 'HTTP_'.$name;
         }
 
