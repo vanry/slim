@@ -1,7 +1,7 @@
 {
     "name": "vanry/slim",
     "description": "Slim framework skeleton for simple and small application",
-    "keywords": ["slim", "microframework", "skeleton"],
+    "keywords": ["slim", "slim 4 skeleton", "microframework"],
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -35,6 +35,10 @@
         "psr-4": {
             "Tests\\": "tests"
         }
+    },
+    "scripts": {
+        "serve": "php -S localhost:8000 -t public",
+        "test": "vendor/bin/phpunit"
     },
     "config": {
         "sort-packages": true
