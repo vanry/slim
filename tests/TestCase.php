@@ -219,14 +219,14 @@ class TestCase extends PHPUnitTestCase
         return $this->assertResponseStatus(StatusCode::STATUS_OK);
     }
 
-    public function assertResponseStatus($status)
+    public function assertResponseStatus(int $status)
     {
-        $this->assertSame($status, $this->response->getStatusCode());
+        $this->assertEquals($status, $this->response->getStatusCode());
 
         return $this;
     }
 
-    public function assertSee($value)
+    public function assertSee(string $value)
     {
         $this->assertStringContainsString($value, (string) $this->response->getBody());
     }
