@@ -7,9 +7,9 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\App;
 use Slim\Psr7\Factory\StreamFactory;
+use Slim\Psr7\Factory\UriFactory;
 use Slim\Psr7\Headers;
 use Slim\Psr7\Request;
-use Slim\Psr7\Uri;
 
 class TestCase extends PHPUnitTestCase
 {
@@ -189,29 +189,13 @@ class TestCase extends PHPUnitTestCase
         array $serverParams = [],
         array $uploadedFiles = []
     ) {
-        $uri = $this->createUriFromString($uri);
+        $uri = (new UriFactory)->createUri($uri);
 
         $headers = new Headers($headers);
 
         $stream = (new StreamFactory)->createStream();
 
         return new Request($method, $uri, $headers, $cookies, $serverParams, $stream, $uploadedFiles);
-    }
-
-    protected function createUriFromString(string $uri)
-    {
-        $components = parse_url($uri);
-
-        return new Uri(
-            $components['scheme'] ?? '',
-            $components['host'] ?? '',
-            $components['port'] ?? null,
-            $components['path'] ?? '/',
-            $components['query'] ?? '',
-            $components['fragment'] ?? '',
-            $components['user'] ?? '',
-            $components['pass'] ?? '',
-        );
     }
 
     public function assertResponseOk()
