@@ -16,7 +16,7 @@ $app = Slim\Factory\AppFactory::createFromContainer(
 $errorHandler = new App\Handlers\ErrorHandler(
     $app->getCallableResolver(),
     $app->getResponseFactory(),
-    $container->offsetGet('logger'),
+    $container['logger'],
 );
 
 $app->addErrorMiddleware(config('app.debug'), true, true)

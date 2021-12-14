@@ -6,24 +6,25 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\App;
+use Slim\Interfaces\RouteParserInterface;
+use Slim\Views\PhpRenderer;
 
 class PhpRendererMiddleware implements MiddlewareInterface
 {
-    protected $app;
+    protected $renderer;
 
-    public function __construct(App $app)
+    protected $routeParser;
+
+    public function __construct(PhpRenderer $renderer, RouteParserInterface $routeParser)
     {
-        $this->app = $app;
+        $this->renderer = $renderer;
+        $this->routeParser = $routeParser;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var \Slim\Views\PhpRenderer */
-        $view = $this->app->getContainer()->get('view');
-
-        $view->addAttribute('request', $request);
-        $view->addAttribute('routeParser', $this->app->getRouteCollector()->getRouteParser());
+        $this->renderer->addAttribute('uri', $request->getUri());
+        $this->renderer->addAttribute('routeParser', $this->routeParser);
 
         return $handler->handle($request);
     }
