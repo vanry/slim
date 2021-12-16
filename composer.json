@@ -41,6 +41,7 @@
         "test": "vendor/bin/phpunit"
     },
     "config": {
+        "optimize-autoloader": true,
         "sort-packages": true
     }
 }
